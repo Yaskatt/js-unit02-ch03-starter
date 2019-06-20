@@ -28,19 +28,34 @@ function handleClick(e) {
 }
 
 function getData() {
-  /* 
-    fetchDataを呼び出し、responseのステータスを元にデータ取得成功か失敗かを判断しましょう。 
+  /*
+    fetchDataを呼び出し、responseのステータスを元にデータ取得成功か失敗かを判断しましょう。
     成功ならpropertyDataをPromise.resolveで返します。
     失敗ならエラーメッセージをPromise.rejectで返します。
   */
+ return fetchData().then((response) => {
+   if (response.status === 200) {
+     return Promise.resolve(response.propertyData);
+   } else {
+     return Promise.reject(response.message);
+   }
+ })
 }
 
 
-function fetchData() {
-  const url = `${endpoint}/properties/1`
-  /* 
+function fetchData(id=1) {
+  const url = `${endpoint}/properties/${id}`;
+  /*
     fetchを使ってデータを取得します。
   */
+ const initObj = {
+   method: 'get',
+   headers: {
+     'Accept': 'application/json',
+     'Content-Type': 'application/json'
+   }
+ }
+ return fetch(url, initObj);
 }
 
 {
