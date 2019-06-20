@@ -34,10 +34,11 @@ function getData() {
     失敗ならエラーメッセージをPromise.rejectで返します。
   */
  return fetchData().then((response) => {
+   const json = response.json();
    if (response.status === 200) {
-     return Promise.resolve(response.propertyData);
+     return Promise.resolve(json.propertyData);
    } else {
-     return Promise.reject(response.message);
+     return Promise.reject(json.message);
    }
  })
 }
