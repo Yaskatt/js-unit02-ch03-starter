@@ -1,12 +1,12 @@
 const endpoint = "http://localhost:3000"
 
 function handleClick(e) {
-  e.preventDefault();
-  const mainEl = document.getElementById('main');
-  return getData()
-    .then((data) => {
-      const propertyData = data.propertyData;
-      mainEl.innerHTML = `
+	e.preventDefault();
+	const mainEl = document.getElementById('main');
+	return getData()
+		.then((data) => {
+			const propertyData = data.propertyData;
+			mainEl.innerHTML = `
         <div className="property-info-wrapper">
           <p><b>タイトル: </b>${propertyData.propertyName}</p>
           <p><b>タイプ: </b>${propertyData.propertyType}</p>
@@ -17,49 +17,54 @@ function handleClick(e) {
           <p><b>ホスト: </b>${propertyData.host.firstName}</p>
         </div>
       `
-    })
-    .catch((e) => {
-      mainEl.innerHTML = `
+		})
+		.catch((e) => {
+			mainEl.innerHTML = `
         <div className="property-info-wrapper">
           <p>${e.message}</p>
         </div>
       `
-    })
+		})
 }
 
 function getData() {
-  /*
-    fetchDataを呼び出し、responseのステータスを元にデータ取得成功か失敗かを判断しましょう。
-    成功ならpropertyDataをPromise.resolveで返します。
-    失敗ならエラーメッセージをPromise.rejectで返します。
-  */
- return fetchData().then((response) => {
-   const json = response.json();
-   if (response.status === 200) {
-     return Promise.resolve(json.propertyData);
-   } else {
-     return Promise.reject(json.message);
-   }
- })
+	/*
+	  fetchDataを呼び出し、responseのステータスを元にデータ取得成功か失敗かを判断しましょう。
+	  成功ならpropertyDataをPromise.resolveで返します。
+	  失敗ならエラーメッセージをPromise.rejectで返します。
+	*/
+	return fetchData().then((response) => {
+		const json = response.json();
+		if (response.status === 200) {
+			// return json.then((data) => {
+			// 	return Promise.resolve(data.propertyData);
+			// })
+			return json;
+		} else {
+			return json.then((data) => {
+				return Promise.reject(data.message);
+			})
+		}
+	})
 }
 
 
-function fetchData(id=1) {
-  const url = `${endpoint}/properties/${id}`;
-  /*
-    fetchを使ってデータを取得します。
-  */
- const initObj = {
-   method: 'get',
-   headers: {
-     'Accept': 'application/json',
-     'Content-Type': 'application/json'
-   }
- }
- return fetch(url, initObj);
+function fetchData(id = 1) {
+	const url = `${endpoint}/properties/${id}`;
+	/*
+	  fetchを使ってデータを取得します。
+	*/
+	const initObj = {
+		method: 'get',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		}
+	}
+	return fetch(url, initObj);
 }
 
 {
-  const button1 = document.getElementById('button1');
-  button1.addEventListener("click", handleClick);
+	const button1 = document.getElementById('button1');
+	button1.addEventListener("click", handleClick);
 }
